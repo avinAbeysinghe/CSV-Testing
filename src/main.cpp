@@ -16,7 +16,7 @@ std::ofstream sharedCSV;
 class CSVManager{
 private:
     int csv_counter;
-    std::string tracker = "csv_tracker.txt";
+    std::string tracker = "./tests/csv_tracker.txt";
 public:
     CSVManager(){
         std::ifstream csv_tracker(tracker);
@@ -26,7 +26,7 @@ public:
     }
     std::string newDataLog(){
         csv_counter++;
-        fileName = "data_log_" + std::to_string(csv_counter) + ".csv";
+        fileName = "./tests/data_log_" + std::to_string(csv_counter) + ".csv";
         return fileName;
     }
     void saveCSVCountNum(){
@@ -80,7 +80,7 @@ public:
         //different Headers
         headerList.emplace_back(name + ": power");
         headerList.emplace_back(name + ": voltage");
-        headerList.emplace_back(name + ": velocity");
+        headerList.emplace_back(name + ": veocity");
 
     }
     //Remember to delete Motor when done using it. 
