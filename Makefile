@@ -2,34 +2,35 @@ CXX ?= g++
 CXXFLAGS ?= -std=c++17 -Iinclude -O2 -Wall -Wextra
 
 SRCS_TEMPLATES := src/templates.cpp
-SRCS_MAIN := src/main.cpp $(SRCS_TEMPLATES)
+SRCS_MAINC := src/mainC.cpp 
 SRCS_MAINT := src/mainT.cpp $(SRCS_TEMPLATES)
 
-BIN_DIR := build
-TARGET := $(BIN_DIR)/main
-TARGET_T := $(BIN_DIR)/mainT
+OBJ_DIR := bin
+BUILD_DIR := build
+TARGET_C := $(BUILD_DIR)/mainC
+TARGET_T := $(BUILD_DIR)/mainT
 
-all: $(TARGET) $(TARGET_T)
+all: $(TARGET_C) $(TARGET_T)
 
-$(BIN_DIR):
-	mkdir -p $(BIN_DIR)
+$(OBJ_DIR) $(BUILD_DIR):
+	mkdir -p $@
 
-build/%.o: src/%.cpp | $(BIN_DIR)
+$(OBJ_DIR)/%.o: src/%.cpp | $(OBJ_DIR)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-$(TARGET): $(patsubst src/%.cpp,build/%.o,$(SRCS_MAIN))
+$(TARGET_C): $(patsubst src/%.cpp,$(OBJ_DIR)/%.o,$(SRCS_MAINC)) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-$(TARGET_T): $(patsubst src/%.cpp,build/%.o,$(SRCS_MAINT))
+$(TARGET_T): $(patsubst src/%.cpp,$(OBJ_DIR)/%.o,$(SRCS_MAINT)) | $(BUILD_DIR)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-run-main: $(TARGET)
-	./$(TARGET)
+run-mainC: $(TARGET_C)
+	./$(TARGET_C)
 
 run-mainT: $(TARGET_T)
 	./$(TARGET_T)
 
 clean:
-	rm -rf $(BIN_DIR)/*.o $(TARGET) $(TARGET_T)
+	rm -rf $(OBJ_DIR)/*.o $(TARGET_C) $(TARGET_T)
 
-.PHONY: all clean run-main run-mainT
+.PHONY: all clean run-mainC run-mainT

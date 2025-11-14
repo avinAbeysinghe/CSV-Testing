@@ -52,7 +52,7 @@ public:
     }
     static void confirmList(){
         //auto lastHeader = std::prev(headerList.end());
-        headerList.insert(headerList.begin(), "Time(sec)");
+        headerList.insert(headerList.begin(), "Time(s)");
         for(int i = 0; i < headerList.size(); ++i){
             if(i == headerList.size() - 1){ // if this header equals the last one, no comma at the end
                 sharedCSV << headerList[i] << '\n'; 

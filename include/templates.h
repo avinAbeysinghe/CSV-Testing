@@ -15,22 +15,42 @@ class CSVManager{
 private:
     int csv_counter;
     std::string tracker = "./tests/csv_tracker.txt";
+    std::string prevPrefix; //gets the previous dating prefix of another file
+
+    std::string dateTime() { //this is the time when the code was compiled(NOT IN REAL TIME)
+        const char* date = __DATE__;
+        const char* time = __TIME__;
+        char createDate[20]; //this entire part will be 20 characters
+        snprintf(createDate, sizeof(createDate), "%c%c_%c%c%c_%c%c_%c%c", //how the string will be formatted
+            date[4]== ' ' ? '0': date[4], date[5], //day
+            date[0], date[1], date[2], //month
+            time[0], time[1], //hour
+            time[3], time[4] //minutes
+        );
+        return std::string(createDate);
+    };
+    
 public:
-    inline CSVManager(){
-        std::ifstream csv_tracker(tracker);
-        if(csv_tracker.is_open()) csv_tracker >> csv_counter;
+    inline CSVManager(){ //another goal is to change this count based on when it was last compiled 
+        std::ifstream csv_tracker(tracker); //for the tracker file, the scope will automatically close it 
+        if(csv_tracker.is_open()) {
+            std::getline(csv_tracker, prevPrefix); //stores this 
+            if(prevPrefix != dateTime()){
+                csv_counter = 0;
+                return;
+            }
+            csv_tracker >> csv_counter;
+        }
         else csv_counter = 0;
-        csv_tracker.close();
     }
     inline std::string newDataLog(){
         csv_counter++;
-        fileName = "./tests/data_log_" + std::to_string(csv_counter) + ".csv";
+        fileName = "./tests/" + dateTime() + "_data_v" + std::to_string(csv_counter) + ".csv";
         return fileName;
     }
     inline void saveCSVCountNum(){
         std::ofstream out(tracker);
-        out << csv_counter;
-        out.close();
+        out << dateTime() << "\n" << csv_counter;
     }
 };
 
@@ -94,7 +114,7 @@ private:
         sharedCSV << "\n";
     }
 public:
-   SensorLogger(Sensors... s): sensors(s...){
+   SensorLogger(Sensors... s): sensors(std::move(s)...){
         if(!sharedCSV.is_open()){ //checks if the file isn't already opened
             CSVManager manager;
             manager.newDataLog();
