@@ -9,8 +9,8 @@ std::vector<std::string> Motor::headers(const std::string& name) const {
 	return {"VELOC", "POW"};
 }
 
-std::vector<int> Motor::read() const {
-	return {67, 41};
+std::vector <double> Motor::read() const {
+	return {(double)std::rand(), (double)std::rand()}; //check if casting creates additional memory heap
 }
 
 // Color definitions
@@ -20,7 +20,7 @@ std::vector<std::string> Color::headers(const std::string& name) const {
 	return {"HUE", "BRIGHT"};
 }
 
-std::vector<int> Color::read() const {
+std::vector<double> Color::read() const {
 	return {1, 5};
 }
 

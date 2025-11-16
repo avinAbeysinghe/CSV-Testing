@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
-
+#include <cstdlib>
 extern std::string fileName;
 extern std::ofstream sharedCSV;
 
@@ -59,14 +59,14 @@ struct Motor {
     std::string m_Name;
     Motor(std::string n);
     std::vector<std::string> headers(const std::string& name) const;
-    std::vector<int> read() const;
+    std::vector<double> read() const;
 };
 
 struct Color {
     std::string m_Name;
     Color(std::string n);
     std::vector<std::string> headers(const std::string& name) const;
-    std::vector<int> read() const;
+    std::vector<double> read() const;
 };
 
 
